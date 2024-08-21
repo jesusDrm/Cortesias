@@ -188,3 +188,5 @@ if ($valor_final < $valor_inicial) {
                         unlink($file); //Se elimina cada archivo que encuentre
         }
 }
+
+

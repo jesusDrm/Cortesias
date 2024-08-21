@@ -38,20 +38,20 @@
               <div class="card-body p-5 text-center">
                 <h1 class="text-center">CORTESIAS</h1>
 
-                <div class="container mb-3 mt-2">
-                <h2>Nombres</h2>
-                <!-- Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Selecciona una opción
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Opción 1</a>
-                        <a class="dropdown-item" href="#">Opción 2</a>
-                        <a class="dropdown-item" href="#">Opción 3</a>
-                    </div>
-                </div>
-                </div>
+                <!-- DIV agregado -->
+                  <div class="container mb-3 mt-2">
+                  <h2>Nombres</h2>
+                  <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Seleccionar
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <?php include 'nombres.php' 
+                          
+                          ?>
+                      </div>
+                  </div>
+                   </div>
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>

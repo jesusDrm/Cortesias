@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `historial` (
   `ID` int(11) NOT NULL,
-  `Nombre y codigo` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Nombre y codigo` varchar(50) COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Fecha` date NOT NULL,
-  `Rango de folios` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `Rango de folios` varchar(30) COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -41,9 +41,9 @@ CREATE TABLE `historial` (
 
 CREATE TABLE `nombres` (
   `ID` int(11) NOT NULL,
-  `Nombre` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Clave` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `Nombre` varchar(40) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `Clave` varchar(40) COLLATE utf8mb4_0900_ai_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `nombres`
@@ -71,7 +71,7 @@ CREATE TABLE `posicion` (
   `ejey_texto` int(8) NOT NULL,
   `area_qr` int(8) NOT NULL,
   `tam_texto` int(8) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `posicion`

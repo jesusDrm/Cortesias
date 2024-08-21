@@ -1,5 +1,5 @@
 <?php
-  $conec=mysqli_connect('localhost','root', '12345678', 'pasaportes');
+  $conec=mysqli_connect('localhost','root', 'rootroot', 'pasaportes');
   
   
   # Comprobar si existe registro

@@ -35,7 +35,12 @@
           <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card shadow-2-strong" style="border-radius: 1rem;">
               <div class="card-body p-5 text-center">
-                <h1 class="text-center">PASAPORTES</h1>
+                <h1 class="text-center">CORTESIAS</h1>
+                
+                <div class="mb-3">
+                  <label class="form-label">Nombres </label>
+                  <input type="text" class="form-control" name="valor_inicial" required>
+                </div>
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>

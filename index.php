@@ -22,6 +22,7 @@
   <?php
   require_once 'conexion.php';
   include "navbar.php";
+  
 
 
   ?>
@@ -36,10 +37,20 @@
             <div class="card shadow-2-strong" style="border-radius: 1rem;">
               <div class="card-body p-5 text-center">
                 <h1 class="text-center">CORTESIAS</h1>
-                
-                <div class="mb-3">
-                  <label class="form-label">Nombres </label>
-                  <input type="text" class="form-control" name="valor_inicial" required>
+
+                <div class="container mb-3 mt-2">
+                <h2>Nombres</h2>
+                <!-- Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Selecciona una opción
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Opción 1</a>
+                        <a class="dropdown-item" href="#">Opción 2</a>
+                        <a class="dropdown-item" href="#">Opción 3</a>
+                    </div>
+                </div>
                 </div>
 
                 <div class="mb-3">

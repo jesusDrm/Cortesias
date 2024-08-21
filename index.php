@@ -14,7 +14,7 @@
   <link rel="icon" href="./assets/img/icono.ico" type="image/x-icon">
 
 
-  <title>PASAPORTES</title>
+  <title>CORTESIAS</title>
 </head>
 
 <body>

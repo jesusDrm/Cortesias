@@ -55,19 +55,19 @@
                 </div>
                 <div class="mb-3">
                       <label class="form-label">Cantidad de Cortesías:</label>
-                      <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias">
+                      <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias" required>
                     </div>
                   </div>
                 
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_inicial" required>
+                  <input type="text" class="form-control" name="valor_inicial">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">HASTA PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_final" required>
+                  <input type="text" class="form-control" name="valor_final" >
                 </div>
 
                 <button type="submit" class="btn btn-primary">GENERAR PASAPORTES</button>

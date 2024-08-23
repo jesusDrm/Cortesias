@@ -22,9 +22,6 @@
   <?php
   require_once 'conexion.php';
   include "navbar.php";
-  
-
-
   ?>
   <!--------------------------------------- FORMULARIO BUSQUEDA DE EMPLEADOS ------------------------------------------>
 
@@ -38,20 +35,24 @@
               <div class="card-body p-5 text-center">
                 <h1 class="text-center">CORTESIAS</h1>
 
-                <!-- DIV agregado -->
-                  <div class="container mb-3 mt-2">
+                  <!-- DIV para mostrar nombres -->
+                <div class="container mb-3 mt-2">
                   <h2>Nombres</h2>
                   <div class="dropdown">
-                      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                           Seleccionar
                       </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <?php include 'nombres.php' 
-                          
-                          ?>
-                      </div>
+                      <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
+                          <!-- Opciones serán cargadas por JavaScript -->
+                      </ul>
                   </div>
-                   </div>
+                </div>
+
+                <!-- Cuadro de texto para mostrar el nombre seleccionado -->
+                <div class="mb-3">
+                  <label class="form-label">Nombre Seleccionado: </label>
+                  <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
+                </div>
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>
@@ -75,6 +76,40 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+  <!-- Script para cargar datos JSON y actualizar el dropdown -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('nombres.php')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error en la red');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const dropdownMenu = document.getElementById('dropdownMenu');
+          
+          if (Array.isArray(data)) {
+            // Limpiar dropdown antes de agregar nuevos elementos
+            dropdownMenu.innerHTML = '';
+            
+            // Crear y agregar elementos de la lista
+            data.forEach(nombre => {
+              const li = document.createElement('li');
+              li.innerHTML = `<a class="dropdown-item" onclick="setName('${nombre}')">${nombre}</a>`;
+              dropdownMenu.appendChild(li);
+            });
+          } else {
+            console.error('Los datos recibidos no son un array JSON válido:', data);
+          }
+        })
+        .catch(error => console.error('Error al cargar los datos:', error));
+    });
+
+    function setName(name) {
+      document.getElementById('nombreSeleccionado').value = name;
+    }
+  </script>
 </body>
 
 </html>

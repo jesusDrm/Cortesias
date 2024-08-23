@@ -38,16 +38,22 @@
                   <!-- DIV para mostrar nombres -->
                 <div class="container mb-3 mt-2">
                   <h2>Nombres</h2>
-                  <div class="dropdown">
+                  <div class="d-flex align-items-center">
+                    <div class="dropdown me-3">
                       <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                          Seleccionar
+                        Seleccionar
                       </button>
                       <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-                          <!-- Opciones serán cargadas por JavaScript -->
+                        <!-- Opciones serán cargadas por JavaScript -->
                       </ul>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Cantidad de Cortesías:</label>
+                      <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias">
+                    </div>
                   </div>
                 </div>
-
+                
                 <!-- Cuadro de texto para mostrar el nombre seleccionado -->
                 <div class="mb-3">
                   <label class="form-label">Nombre Seleccionado: </label>

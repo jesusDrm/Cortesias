@@ -47,18 +47,18 @@
                         <!-- Opciones serán cargadas por JavaScript -->
                       </ul>
                     </div>
-                    <div class="mb-3">
+                  <!-- Cuadro de texto para mostrar el nombre seleccionado -->
+                <div class="mb-3">
+                  <label class="form-label">Nombre Seleccionado: </label>
+                  <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
+                </div>   
+                </div>
+                <div class="mb-3">
                       <label class="form-label">Cantidad de Cortesías:</label>
                       <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias">
                     </div>
                   </div>
-                </div>
                 
-                <!-- Cuadro de texto para mostrar el nombre seleccionado -->
-                <div class="mb-3">
-                  <label class="form-label">Nombre Seleccionado: </label>
-                  <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
-                </div>
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>

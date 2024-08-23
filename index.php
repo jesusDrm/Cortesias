@@ -38,30 +38,36 @@
                   <!-- DIV para mostrar nombres -->
                 <div class="container mb-3 mt-2">
                   <h2>Nombres</h2>
-                  <div class="dropdown">
+                  <div class="d-flex align-items-center">
+                    <div class="dropdown me-3">
                       <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                          Seleccionar
+                        Seleccionar
                       </button>
                       <ul class="dropdown-menu" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-                          <!-- Opciones serán cargadas por JavaScript -->
+                        <!-- Opciones serán cargadas por JavaScript -->
                       </ul>
-                  </div>
-                </div>
-
-                <!-- Cuadro de texto para mostrar el nombre seleccionado -->
+                    </div>
+                  <!-- Cuadro de texto para mostrar el nombre seleccionado -->
                 <div class="mb-3">
                   <label class="form-label">Nombre Seleccionado: </label>
                   <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
+                </div>   
                 </div>
+                <div class="mb-3">
+                      <label class="form-label">Cantidad de Cortesías:</label>
+                      <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias" required>
+                    </div>
+                  </div>
+                
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_inicial" required>
+                  <input type="text" class="form-control" name="valor_inicial">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">HASTA PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_final" required>
+                  <input type="text" class="form-control" name="valor_final" >
                 </div>
 
                 <button type="submit" class="btn btn-primary">GENERAR PASAPORTES</button>

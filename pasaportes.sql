@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 23-08-2024 a las 17:17:29
+-- Tiempo de generación: 23-08-2024 a las 20:36:52
 -- Versión del servidor: 8.0.17
 -- Versión de PHP: 7.3.10
 
@@ -30,12 +30,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `historial` (
   `ID` int(11) NOT NULL,
-  `Nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Clave` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NombreID` int(11) NOT NULL,
   `Fecha` date NOT NULL,
   `NumeroCortesias` int(100) NOT NULL,
   `Clave de rango inicial` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Clave de rango final` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Clave de rango final` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -113,14 +112,13 @@ INSERT INTO `prueba` (`id`, `Cortesias`) VALUES
 --
 ALTER TABLE `historial`
   ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `ID` (`ID`);
+  ADD KEY `fk_historial_nombres_idx` (`NombreID`);
 
 --
 -- Indices de la tabla `nombres`
 --
 ALTER TABLE `nombres`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `ID` (`ID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indices de la tabla `prueba`
@@ -133,10 +131,32 @@ ALTER TABLE `prueba`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `historial`
+--
+ALTER TABLE `historial`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `nombres`
+--
+ALTER TABLE `nombres`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `prueba`
 --
 ALTER TABLE `prueba`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `historial`
+--
+ALTER TABLE `historial`
+  ADD CONSTRAINT `fk_historial_nombres` FOREIGN KEY (`NombreID`) REFERENCES `nombres` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

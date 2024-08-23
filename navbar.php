@@ -20,11 +20,14 @@
           <li class="nav-item">
             <h4><a class="nav-link active text-ligth " aria-current="page" href="index_modificar.php">MODIFICAR VALORES</a></h4>
           </li>
-
-
-
-
-        </ul>
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+         <li class="nav-item">
+            <h4><a class="nav-link active text-ligth " aria-current="page" href="index_historial.php">HISTORIAL</a></h4>
+          </li>
+       </ul>
       </div>
     </div>
   </nav>

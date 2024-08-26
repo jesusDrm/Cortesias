@@ -53,21 +53,21 @@
                   <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
                 </div>   
                 </div>
+
                 <div class="mb-3">
-                      <label class="form-label">Cantidad de Cortesías:</label>
-                      <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias" required>
-                    </div>
-                  </div>
+                <label class="form-label">Cantidad de Cortesías:</label>
+                <input type="text" class="form-control" id="cantidadCortesias" name="cantidad_cortesias" oninput="actualizarRangos()" required>
+              </div>
                 
 
                 <div class="mb-3">
                   <label class="form-label">DE PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_inicial">
+                  <input type="text" class="form-control" id="valorInicial" name="valor_inicial">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">HASTA PSWAS: </label>
-                  <input type="text" class="form-control" name="valor_final" >
+                  <input type="text" class="form-control" id="valorFinal" name="valor_final" >
                 </div>
 
                 <button type="submit" class="btn btn-primary">GENERAR PASAPORTES</button>
@@ -105,7 +105,7 @@
               li.innerHTML = `<a class="dropdown-item" onclick="setName('${nombre}')">${nombre}</a>`;
               dropdownMenu.appendChild(li);
             });
-          } else {
+          } else   {
             console.error('Los datos recibidos no son un array JSON válido:', data);
           }
         })
@@ -115,6 +115,26 @@
     function setName(name) {
       document.getElementById('nombreSeleccionado').value = name;
     }
+    function actualizarRangos() {
+      const nombreSeleccionado = document.getElementById('nombreSeleccionado').value;
+      const cantidadCortesias = document.getElementById('cantidadCortesias').value;
+
+      if (nombreSeleccionado && cantidadCortesias) {
+        fetch(`calcular_rangos.php?nombre=${nombreSeleccionado}&cantidad=${cantidadCortesias}`)
+          .then(response => response.json())  // Error corregido aquí
+          .then(data => {
+            if (data && data.rangoInicial && data.rangoFinal) {
+              document.getElementById('valorInicial').value = data.rangoInicial;
+              document.getElementById('valorFinal').value = data.rangoFinal;
+            } else {
+              console.error('Respuesta inesperada del servidor: ', data);
+            }
+          })
+          .catch(error => console.error('Error al actualizar los rangos: ', error));
+      }
+    }
+    
+    
   </script>
 </body>
 

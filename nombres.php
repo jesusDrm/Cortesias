@@ -1,7 +1,7 @@
 <?php
 // nombres.php
 
-$conec=mysqli_connect('localhost','root', 'rootroot', 'pasaportes');
+$conec = mysqli_connect('localhost', 'root', 'rootroot', 'pasaportes');
 
 // Verificar si la conexión a la base de datos se realizó correctamente
 if (!$conec) {
@@ -11,7 +11,7 @@ if (!$conec) {
 }
 
 // Consultar nombres de la Familia Camacho desde la tabla nombres.
-$consulta = "SELECT Nombre FROM nombres";
+$consulta = "SELECT ID, Nombre FROM nombres";
 $result = $conec->query($consulta);
 
 // Verificar si la consulta fue exitosa
@@ -24,7 +24,7 @@ if (!$result) {
 // Crear un array para almacenar los nombres
 $nombres = [];
 while ($row = $result->fetch_assoc()) {
-    $nombres[] = $row['Nombre'];
+    $nombres[] = $row; // Incluye ID y Nombre
 }
 
 // Convertir el array a formato JSON

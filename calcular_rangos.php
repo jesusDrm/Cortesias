@@ -1,40 +1,61 @@
 <?php
-$conec=mysqli_connect('localhost','root', 'rootroot', 'pasaportes');
-$nombre = $_GET['nombre'];
-$cantidad = intval($_GET['cantidad']);
+$conec = mysqli_connect('localhost', 'root', 'rootroot', 'pasaportes');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Consulta para obtener el último valor registrado en la tabla historial
-$sql_last_entry = "SELECT `Clave de rango final` FROM historial ORDER BY `ID` DESC LIMIT 1";
-$result_last_entry = mysqli_query($conec, $sql_last_entry);
+header('Content-Type: application/json');
 
-if ($result_last_entry && mysqli_num_rows($result_last_entry) > 0) {
-    $row_last_entry = mysqli_fetch_assoc($result_last_entry);
-    $ultimo_rango_final = $row_last_entry['Clave de rango final'];
+$ID_Nom = $_POST['ID_Nom'] ?? ''; // ID del nombre
+$cantidad = intval($_POST['cantidad_cortesias'] ?? 0);
 
-    // Extraer el número del último rango final
-    preg_match('/\d+$/', $ultimo_rango_final, $matches);
-    $ultimo_rango_final_num = intval($matches[0]);
-} else {
-    // Si no hay registro, comenzar desde el valor inicial
-    $ultimo_rango_final_num = 0;
+// Verifica que las variables no estén vacías
+if (empty($ID_Nom) || $cantidad <= 0) {
+    echo json_encode([
+        'error' => 'ID o cantidad inválidos.',
+        'ID_Nom' => $ID_Nom,
+        'cantidad' => $cantidad
+    ]);
+    exit();
 }
 
-// Consulta del IDNombre y Clave asociada
-$sql_clave = "SELECT Clave FROM nombres WHERE Nombre = '$nombre'";
-$result = mysqli_query($conec, $sql_clave);
+// Obtener la clave del nombre seleccionado usando ID
+$queryClave = "SELECT Clave FROM nombres WHERE ID = ?";
+$stmtClave = $conec->prepare($queryClave);
+$stmtClave->bind_param("i", $ID_Nom);
+$stmtClave->execute();
+$resultClave = $stmtClave->get_result();
 
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $clave = $row['Clave'];
+if ($resultClave && $resultClave->num_rows > 0) {
+    $rowClave = $resultClave->fetch_assoc();
+    $clave = $rowClave['Clave'];
 
-    // Calcular el nuevo rango concatenando la clave
-    $clave_rango_inicial = $clave . str_pad($ultimo_rango_final_num + 1, 4, '0', STR_PAD_LEFT);
-    $clave_rango_final = $clave . str_pad($ultimo_rango_final_num + $cantidad, 4, '0', STR_PAD_LEFT);
+    // Obtener el último rango final de la tabla historial
+    $queryLastEntry = "SELECT `Clave de rango final` FROM historial ORDER BY ID DESC LIMIT 1";
+    $stmtLastEntry = $conec->prepare($queryLastEntry);
+    $stmtLastEntry->execute();
+    $resultLastEntry = $stmtLastEntry->get_result();
 
-    echo json_encode(['rangoInicial' => $clave_rango_inicial, 'rangoFinal' => $clave_rango_final]);
+    if ($resultLastEntry && $resultLastEntry->num_rows > 0) {
+        $rowLastEntry = $resultLastEntry->fetch_assoc();
+        $ultimoRangoFinal = $rowLastEntry['Clave de rango final'];
+
+        // Extraer el prefijo y el número del rango final
+        preg_match('/^([A-Z]+)(\d+)$/', $ultimoRangoFinal, $matches);
+        $prefijo = $matches[1] ?? $clave;
+        $ultimoRangoFinalNum = isset($matches[2]) ? intval($matches[2]) : 0;
+    } else {
+        $prefijo = $clave;
+        $ultimoRangoFinalNum = 0;
+    }
+
+    // Calcular el nuevo rango
+    $claveRangoInicial = $prefijo . str_pad($ultimoRangoFinalNum + 1, 4, '0', STR_PAD_LEFT);
+    $claveRangoFinal = $prefijo . str_pad($ultimoRangoFinalNum + $cantidad, 4, '0', STR_PAD_LEFT);
+
+    echo json_encode(['rangoInicial' => $claveRangoInicial, 'rangoFinal' => $claveRangoFinal]);
 } else {
-    echo json_encode(['error' => 'Nombre no encontrado']);
+    echo json_encode(['error' => 'ID no encontrado']);
 }
 
-mysqli_close($conec);
+$conec->close();
 ?>

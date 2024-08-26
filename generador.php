@@ -4,6 +4,8 @@
 //require_once "vendor/autoload.php"; // Incluimos el autoload, sive para generar los codigos  QR
 //require "phpqrcode/qrlib.php";
 include 'conexion.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 /************************* BIBLIOTECAS PARA CODIGOS DE BARRAS ******************************************/
 // # Indicamos que usaremos el namespace de BarcodeGeneratorPNG
@@ -11,65 +13,80 @@ include 'conexion.php';
 // # Crear generador
 // $generador = new BarcodeGeneratorJPG();
 /*******************************************************************************************************/
+// Variables
+$ID_Nom = $_POST['ID_Nom']; // ID del nombre seleccionado
+$cantidad_cortesias = $_POST['cantidad_cortesias']; // Cantidad de cortesías
+$fecha_actual = date('Y-m-d'); // Fecha actual
 
-
-// Recibir el nombre seleccionado y cantidad de cortesías del formulario
-$nombreSeleccionado = $_POST['nombre_seleccionado'];
-$cantidad_cortesias = $_POST['cantidad_cortesias'];
-$fecha_actual = date("Y-m-d");
-
-// 1. Obtener el último valor registrado
-$sql_last_entry = "SELECT `Clave de rango final` FROM historial ORDER BY `ID` DESC LIMIT 1";
-$result_last_entry = mysqli_query($conec, $sql_last_entry);
-
-if($result_last_entry && mysqli_num_rows($result_last_entry) > 0){
-    $row_last_entry = mysqli_fetch_assoc($result_last_entry);
-    $ultimo_rango_final = $row_last_entry['Clave de rango final'];
-
-    // Extraer el número del último rango final
-    preg_match('/\d+$/', $ultimo_rango_final, $matches);
-    $ultimo_rango_final_num = intval($matches[0]);
-
-} else {
-    // Si no hay registro, comenzar desde el valor inicial
-    $ultimo_rango_final_num = 0;
+// Verifica que las variables no estén vacías
+if (empty($ID_Nom) || empty($cantidad_cortesias)) {
+    die("ID_Nom o cantidad_cortesias están vacíos.");
 }
 
-// 2. Consulta del IDNombre y Clave asociada
-$sql_clave = "SELECT ID, Clave FROM nombres WHERE Nombre = '$nombreSeleccionado'";
-$result = mysqli_query($conec, $sql_clave);
+// Obtener la clave del nombre
+$queryNombre = "SELECT Clave FROM nombres WHERE ID = ?";
+$stmtNombre = $conec->prepare($queryNombre);
+$stmtNombre->bind_param("i", $ID_Nom);
+$stmtNombre->execute();
+$resultNombre = $stmtNombre->get_result();
 
-if($result && mysqli_num_rows($result) > 0){
-    $row = mysqli_fetch_assoc($result);
-    $ID_Nom = $row['ID'];
-    $clave = $row['Clave'];
-
-    // 3. Calcular el nuevo rango concatenando la clave
-    $clave_rango_inicial = $clave . str_pad($ultimo_rango_final_num + 1, 4, '0', STR_PAD_LEFT);
-    $clave_rango_final = $clave . str_pad($ultimo_rango_final_num + $cantidad_cortesias, 4, '0', STR_PAD_LEFT);
-
-    echo "ID Nombre: " . $ID_Nom . "<br>";
-    echo "Clave: " . $clave . "<br>";
-    echo "Clave de rango inicial: " . $clave_rango_inicial . "<br>";
-    echo "Clave de rango final: " . $clave_rango_final . "<br>";
-
-    // 4. Ingreso de datos para la tabla historial
-    $insert_historial = "INSERT INTO historial (NombreID, Fecha, NumeroCortesias, `Clave de rango inicial`, `Clave de rango final`) 
-                         VALUES ('$ID_Nom', '$fecha_actual', '$cantidad_cortesias', '$clave_rango_inicial', '$clave_rango_final')";
-
-    // Ejecutar la consulta
-    if (mysqli_query($conec, $insert_historial)){
-        echo "Registro añadido correctamente a la tabla historial.";
-    } else {
-        echo "Error: " . mysqli_error($conec); 
-    }
-
-} else {
-    echo "No se encontró el nombre seleccionado.";
+if ($resultNombre->num_rows === 0) {
+    die("No se encontró el nombre con ID: $ID_Nom");
 }
 
-mysqli_close($conec);        
+$rowNombre = $resultNombre->fetch_assoc();
+$claveNombre = $rowNombre['Clave'];
 
+// Consulta para obtener el último valor de clave final
+$query = "SELECT `Clave de rango final` FROM historial WHERE NombreID = ? ORDER BY ID DESC LIMIT 1";
+$stmt = $conec->prepare($query);
+$stmt->bind_param("i", $ID_Nom);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if (!$result) {
+    die("Error en la consulta de historial: " . $conec->error);
+}
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $lastFinalKey = $row['Clave de rango final'];
+} else {
+    $lastFinalKey = $claveNombre . '0000';
+}
+
+// Extraer el número de la clave
+$lastNumber = (int)substr($lastFinalKey, strlen($claveNombre));
+
+// Calcular el nuevo rango
+$startNumber = $lastNumber + 1;
+$endNumber = $startNumber + $cantidad_cortesias - 1;
+
+// Convertir los números de nuevo a formato de clave
+$claveRangoInicial = $claveNombre . str_pad($startNumber, 4, '0', STR_PAD_LEFT);
+$claveRangoFinal = $claveNombre . str_pad($endNumber, 4, '0', STR_PAD_LEFT);
+
+// Mensajes de depuración
+echo "Clave Nombre: $claveNombre<br>";
+echo "Última Clave Final: $lastFinalKey<br>";
+echo "Rango Inicial: $claveRangoInicial<br>";
+echo "Rango Final: $claveRangoFinal<br>";
+
+// Inserción en la base de datos
+$queryInsert = "INSERT INTO historial (NombreID, Fecha, NumeroCortesias, `Clave de rango inicial`, `Clave de rango final`) 
+                VALUES (?, ?, ?, ?, ?)";
+
+$stmtInsert = $conec->prepare($queryInsert);
+$stmtInsert->bind_param("isiss", $ID_Nom, $fecha_actual, $cantidad_cortesias, $claveRangoInicial, $claveRangoFinal);
+
+if ($stmtInsert->execute()) {
+    echo "Datos insertados correctamente";
+} else {
+    echo "Error al insertar datos: " . $stmtInsert->error;
+}
+
+// Cerrar la conexión
+$conec->close();
 
 /*
 
@@ -252,5 +269,5 @@ if ($valor_final < $valor_inicial) {
         }
                         
 }
-
-
+*/
+?>

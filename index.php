@@ -51,6 +51,7 @@
                 <div class="mb-3">
                   <label class="form-label">Nombre Seleccionado: </label>
                   <input type="text" class="form-control" id="nombreSeleccionado" name="nombre_seleccionado" readonly>
+                  <input type="hidden" id="ID_Nom" name="ID_Nom">
                 </div>   
                 </div>
 
@@ -83,58 +84,74 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   <!-- Script para cargar datos JSON y actualizar el dropdown -->
+  <!-- Script para cargar datos JSON y actualizar el dropdown -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      fetch('nombres.php')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Error en la red');
-          }
-          return response.json();
-        })
-        .then(data => {
-          const dropdownMenu = document.getElementById('dropdownMenu');
-          
-          if (Array.isArray(data)) {
-            // Limpiar dropdown antes de agregar nuevos elementos
-            dropdownMenu.innerHTML = '';
-            
-            // Crear y agregar elementos de la lista
-            data.forEach(nombre => {
-              const li = document.createElement('li');
-              li.innerHTML = `<a class="dropdown-item" onclick="setName('${nombre}')">${nombre}</a>`;
-              dropdownMenu.appendChild(li);
-            });
-          } else   {
-            console.error('Los datos recibidos no son un array JSON válido:', data);
-          }
-        })
-        .catch(error => console.error('Error al cargar los datos:', error));
-    });
-
-    function setName(name) {
-      document.getElementById('nombreSeleccionado').value = name;
-    }
-    function actualizarRangos() {
-      const nombreSeleccionado = document.getElementById('nombreSeleccionado').value;
-      const cantidadCortesias = document.getElementById('cantidadCortesias').value;
-
-      if (nombreSeleccionado && cantidadCortesias) {
-        fetch(`calcular_rangos.php?nombre=${nombreSeleccionado}&cantidad=${cantidadCortesias}`)
-          .then(response => response.json())  // Error corregido aquí
-          .then(data => {
-            if (data && data.rangoInicial && data.rangoFinal) {
-              document.getElementById('valorInicial').value = data.rangoInicial;
-              document.getElementById('valorFinal').value = data.rangoFinal;
-            } else {
-              console.error('Respuesta inesperada del servidor: ', data);
-            }
-          })
-          .catch(error => console.error('Error al actualizar los rangos: ', error));
+   document.addEventListener('DOMContentLoaded', function() {
+  fetch('nombres.php')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error en la red');
       }
-    }
-    
-    
+      return response.json();
+    })
+    .then(data => {
+      const dropdownMenu = document.getElementById('dropdownMenu');
+      
+      if (Array.isArray(data)) {
+        // Limpiar dropdown antes de agregar nuevos elementos
+        dropdownMenu.innerHTML = '';
+        
+        // Crear y agregar elementos de la lista
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a class="dropdown-item" onclick="setName('${item.Nombre}', ${item.ID})">${item.Nombre}</a>`;
+          dropdownMenu.appendChild(li);
+        });
+      } else {
+        console.error('Los datos recibidos no son un array JSON válido:', data);
+      }
+    })
+    .catch(error => console.error('Error al cargar los datos:', error));
+});
+
+function setName(name, id) {
+  document.getElementById('nombreSeleccionado').value = name;
+  document.getElementById('ID_Nom').value = id;
+  actualizarRangos();
+}
+
+function actualizarRangos() {
+  const nombreSeleccionado = document.getElementById('nombreSeleccionado').value;
+  const cantidadCortesias = document.getElementById('cantidadCortesias').value;
+  const idNom = document.getElementById('ID_Nom').value;
+
+  if (nombreSeleccionado && cantidadCortesias && idNom) {
+    fetch('calcular_rangos.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        ID_Nom: idNom,
+        cantidad_cortesias: cantidadCortesias
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.rangoInicial && data.rangoFinal) {
+        document.getElementById('valorInicial').value = data.rangoInicial;
+        document.getElementById('valorFinal').value = data.rangoFinal;
+      } else {
+        console.error('Respuesta inesperada del servidor: ', data);
+      }
+    })
+    .catch(error => console.error('Error al actualizar los rangos: ', error));
+  }
+}
+
+
+
+
   </script>
 </body>
 

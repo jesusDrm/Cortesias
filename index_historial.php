@@ -70,7 +70,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
   // Cargar nombres para el dropdown
   fetch('nombres.php')
     .then(response => {
@@ -81,12 +81,12 @@
     })
     .then(data => {
       const dropdownMenu = document.getElementById('dropdownMenu');
-      
+
       if (Array.isArray(data)) {
         dropdownMenu.innerHTML = '';
-        data.forEach(nombre => {
+        data.forEach(item => {
           const li = document.createElement('li');
-          li.innerHTML = `<a class="dropdown-item" onclick="setName('${nombre}')">${nombre}</a>`;
+          li.innerHTML = `<a class="dropdown-item" onclick="setName('${item.Nombre}')">${item.Nombre}</a>`;
           dropdownMenu.appendChild(li);
         });
       } else {
@@ -114,7 +114,7 @@ function setName(name) {
   document.getElementById('nombreSeleccionado').value = name;
 }
 
-// Consultar historial y mostrar en la tabla
+// Consultar historial y mostrar en la tabla por Nombre
 document.getElementById('consultarBtn').addEventListener('click', function() {
   const nombreSeleccionado = document.getElementById('nombreSeleccionado').value;
   if (nombreSeleccionado) {
@@ -138,11 +138,11 @@ document.getElementById('consultarBtn').addEventListener('click', function() {
 function displayTable(data) {
   let html = '<table class="table table-striped">';
   html += '<thead><tr><th>ID</th><th>Nombre</th><th>Fecha</th><th>No. de cortesías</th><th>Clave de rango inicial</th><th>Clave de rango final</th></tr></thead><tbody>';
-  
+
   data.forEach(item => {
-    html += `<tr><td>${item.ID || ''}</td><td>${item.NombreID || ''}</td><td>${item.Fecha || ''}</td><td>${item.NumeroCortesias || ''}</td><td>${item.RangoInicial || ''}</td><td>${item.RangoFinal || ''}</td></tr>`;
+    html += `<tr><td>${item.ID || ''}</td><td>${item.Nombre || ''}</td><td>${item.Fecha || ''}</td><td>${item.NumeroCortesias || ''}</td><td>${item.RangoInicial || ''}</td><td>${item.RangoFinal || ''}</td></tr>`;
   });  
-  
+
   html += '</tbody></table>';
   document.getElementById('resultados').innerHTML = html;
 }

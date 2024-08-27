@@ -1,24 +1,9 @@
 <?php
-require 'vendor/autoload.php'; // Asegúrate de que la ruta a autoload.php sea correcta
+require 'vendor/autoload.php';
+include 'conexion.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-// Configuración de la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "rootroot";
-$dbname = "pasaportes";
-
-// Crear conexión
-$conec = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conec->connect_error) {
-    http_response_code(500); // Error de servidor
-    echo json_encode(["error" => "Error de conexión: " . $conec->connect_error]);
-    exit();
-}
 
 // Verificar si hay un nombre seleccionado en la solicitud GET
 $nombreSeleccionado = isset($_GET['nombre_seleccionado']) ? $conec->real_escape_string($_GET['nombre_seleccionado']) : '';
@@ -73,10 +58,10 @@ while ($row = $result->fetch_assoc()) {
     $rowNumber++;
 }
 
-// Configurar la cabecera para descarga
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="historial.xlsx"');
 header('Cache-Control: max-age=0');
+
 
 // Escribir el archivo Excel
 $writer = new Xlsx($spreadsheet);

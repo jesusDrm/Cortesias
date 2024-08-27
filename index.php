@@ -148,10 +148,6 @@ function actualizarRangos() {
     .catch(error => console.error('Error al actualizar los rangos: ', error));
   }
 }
-
-
-
-
   </script>
 </body>
 
